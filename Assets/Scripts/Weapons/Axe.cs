@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Axe : Weapon
 {
-    public float axeRange = 1.5f;
-    public float orbitRadius = 1.5f;
+    public float axeRange = 1.0f;
+    public float orbitRadius = 0.5f;
 
     private SpriteRenderer sr;
     private Transform playerTransform;
@@ -12,7 +12,7 @@ public class Axe : Weapon
     {
         base.Start();
         // Find player by tag instead of using parent
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        playerTransform = GameObject.FindGameObjectWithTag("Anchor").transform;
         sr = GetComponent<SpriteRenderer>();
         sr.flipX = true; // Flip the axe sprite to point left by defaults
     }
@@ -50,9 +50,9 @@ public class Axe : Weapon
 
         // Move axe position to orbit around player
         Vector3 direction = (mousePos - playerTransform.position).normalized;
-        transform.position = playerTransform.position + direction * orbitRadius;
+        transform.position = playerTransform.position + direction * 0.05f;
     }
-
+ 
     void HandleSortingOrder()
     {
         if (sr == null || playerTransform == null || inputHandler == null) return;
