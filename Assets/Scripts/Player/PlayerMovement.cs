@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator;
     private Rigidbody2D rb;
     private InputHandler input;
+    private bool wasRunning = false;
 
     void Start()
     {
@@ -17,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        bool isRunning = animator.GetBool("isRunning");
+
         // Use the MoveInput from our InputHandler
         float currentSpeed = player.Stats.MoveSpeed;
         rb.linearVelocity = input.MoveInput * currentSpeed;
@@ -29,6 +32,17 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetBool("isRunning", false);
         }
+
+        if (isRunning && !wasRunning)
+        {
+            FindFirstObjectByType<AudioManager>().Play("Running");
+        }
+        else if (!isRunning && wasRunning)
+        {
+            FindFirstObjectByType<AudioManager>().Stop("Running");
+        }
+
+        wasRunning = isRunning;
         
         FlipTowardMouse();
     }
