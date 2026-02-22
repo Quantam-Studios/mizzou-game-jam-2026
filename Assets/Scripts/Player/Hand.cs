@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,11 +8,17 @@ public class Hand : MonoBehaviour
     private GameObject player;
     private InputHandler inputHandler;
 
+    int maxItems = 4;
+    public GameObject[]heldItems;
+    private int itemCount = 0;
+
     public void Start()
     {
         player = transform.parent.gameObject;
 
         inputHandler = GetComponentInParent<InputHandler>();
+
+        heldItems = new GameObject[maxItems];
 
         if (inputHandler == null)
             inputHandler = FindAnyObjectByType<InputHandler>();
@@ -48,9 +55,24 @@ public class Hand : MonoBehaviour
 
     public void Grab(GameObject item)
     {
-        heldItem = item.gameObject;
+        for (int i = 0; i < heldItems.Length; i++)
+        {
+            if (heldItems[i] == null)
+            {
+                heldItems[i] = item;
+                item.transform.SetParent(transform);
+                item.transform.localPosition = Vector3.zero;
+                return;
+            }
+        }
+        Debug.LogWarning("Cannot hold more than " + maxItems + " items!");
+    }
 
-        item.transform.SetParent(transform);
-        item.transform.localPosition = Vector3.zero;
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Item"))
+        {
+            Grab(other.gameObject);
+        }
     }
 }
