@@ -27,6 +27,8 @@ public class Hand : MonoBehaviour
         controls.Player.EquipSlot3.performed += ctx => Equip(2);
         controls.Player.EquipSlot4.performed += ctx => Equip(3);
 
+        controls.Player.Drop.performed += ctx => Drop();
+
         controls.Enable();
 
         if (heldItem != null)
@@ -98,6 +100,19 @@ public class Hand : MonoBehaviour
         else
         {
             heldItem = null;
+        }
+    }
+
+    public void Drop()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (heldItem == heldItems[i])
+            {
+                heldItems[i] = null;           
+
+                inventory.updateInventory();
+            }
         }
     }
 
